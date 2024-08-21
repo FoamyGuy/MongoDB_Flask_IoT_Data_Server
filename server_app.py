@@ -3,7 +3,7 @@ import json
 
 from bson import ObjectId
 from pymongo import MongoClient
-from flask import Flask, request, Response
+from flask import Flask, request, Response, send_from_directory
 from bson.json_util import dumps
 
 app = Flask(__name__)
@@ -11,23 +11,37 @@ app = Flask(__name__)
 def utc_now():
     return datetime.datetime.now(tz=datetime.timezone.utc)
 def get_database(name):
-    # Provide the mongodb atlas url to connect python to mongodb using pymongo
-    #CONNECTION_STRING = "mongodb+srv://user:pass@cluster.mongodb.net/myFirstDatabase"
     CONNECTION_STRING = "mongodb://localhost:27017/"
 
     # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
     client = MongoClient(CONNECTION_STRING)
 
-    # Create the database for our example (we will use the same database throughout the tutorial
-    # print(dir(client))
-    # print(list(client.list_databases()))
-    # print(client[name])
+    # Create / Get the database and return the connection to it.
     return client[name]
+
+@app.route("/", methods=['GET'])
+def index():
+    return send_from_directory("static", "index.html")
+
 
 @app.route("/temperature", methods=['GET', 'POST'])
 def temperature():
+    """
+    URL: /temperature
+    Methods: GET, POST
 
+    Fetch or Insert Temperature data.
 
+    GET Args:
+      device_id (string): The device ID to fetch data for
+      time_ago_unit (string): The units to measure the time interval in. Valid values: min, hour, day
+      time_ago_value (number): The value of the time interval. E.g. 5 min will fetch data for the last 5 minutes.
+
+    POST Content-Type: application/json
+    POST Args (JSON Body):
+      device_id (string): The device ID to insert the new data reading for
+      temperature (float): The temperature reading value.
+    """
     db = get_database("iot_data")
     temperature_data = db["temperatures"]
     if request.method == 'GET':
@@ -77,3 +91,6 @@ def temperature():
         json_data["timestamp"] = utc_now()
         result = temperature_data.insert_one(json_data)
         return json.dumps({"result": str(result)})
+
+if __name__ == '__main__':
+    app.run()

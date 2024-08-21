@@ -3,19 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <style>
+    #chart_container{
+      margin-top: 60px;
+    }
+  </style>
 </head>
 <body>
 
+<span>Show data from the last </span>
+<input id="time_ago_value_input" type="number" placeholder="time_ago_value">
 <select id="time_ago_unit_select">
   <option value="min">min</option>
   <option value="hour">hour</option>
   <option value="day">day</option>
 </select>
-<input id="time_ago_value_input" type="number" placeholder="time_ago_value">
 <div id="chart_container"></div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="/static/js/app.js"></script>
 </body>
 </html>

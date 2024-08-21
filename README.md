@@ -25,7 +25,7 @@ To run it:
 python post_temperature_10sec_interval.py
 ```
 
-To View the charts page load `http://localhost:5000/static/index.html`
+To View the charts page load `http://localhost:5000/`
 
 There is a dropdown and number input box that can be used to set how much data to include in the chart.
 
